@@ -1,0 +1,14 @@
+{% extends "admin/base.html" %}
+
+{% block breadcrumbs %}
+    {% set breadcrumbs = [
+    ['name' => 'Мета информация', 'url' => url('admin_seo_seo_list')],
+    ['name' => 'Редактирование мета информации: ' ~ seo]
+    ] %}
+    {% parent %}
+{% endblock %}
+
+{% block content %}
+    <h1 class="b-heading">Редактирование мета информации: {{ seo }}</h1>
+    {{ form_render(form)|safe }}
+{% endblock %}

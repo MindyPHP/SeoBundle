@@ -10,31 +10,28 @@
 
 namespace Mindy\Bundle\SeoBundle\Model;
 
-use Mindy\Orm\Fields\BooleanField;
+use Mindy\Bundle\MindyBundle\Traits\AbsoluteUrlInterface;
+use Mindy\Bundle\SeoBundle\Seo\SeoSourceInterface;
 use Mindy\Orm\Fields\CharField;
 use Mindy\Orm\Fields\TextField;
 use Mindy\Orm\Model;
+use Mindy\Orm\ModelInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class Meta.
  *
- * @property string $host
  * @property string $title
  * @property string $url
  * @property string $keywords
  * @property string $canonical
  * @property string $description
- * @property int|bool $is_auto
  */
 class Seo extends Model
 {
     public static function getFields()
     {
         return [
-            'host' => [
-                'class' => CharField::class,
-            ],
             'title' => [
                 'class' => CharField::class,
                 'length' => 60,
@@ -65,15 +62,11 @@ class Seo extends Model
                 'length' => 160,
                 'null' => true,
             ],
-            'is_auto' => [
-                'class' => BooleanField::class,
-                'default' => true,
-            ],
         ];
     }
 
     public function __toString()
     {
-        return sprintf('%s/%s', $this->host, $this->url);
+        return (string) $this->url;
     }
 }

@@ -10,10 +10,28 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Mindy\Bundle\SeoBundle\Helper;
+namespace Mindy\Bundle\SeoBundle\Util;
 
-class SeoHelper
+use Mindy\Bundle\SeoBundle\Seo\SeoSourceInterface;
+use Mindy\Bundle\MindyBundle\Traits\AbsoluteUrlInterface;
+
+class Seo
 {
+    /**
+     * @var array
+     */
+    protected $stopWords = [];
+
+    /**
+     * SeoHelper constructor.
+     *
+     * @param array $stopWords
+     */
+    public function __construct(array $stopWords = [])
+    {
+        $this->stopWords = $stopWords;
+    }
+
     /**
      * @param $source
      *
@@ -60,12 +78,14 @@ class SeoHelper
             }
 
             $word = mb_strtolower($keyword, 'UTF-8');
-
-            if (false === in_array($word, $end)) {
-                $end[] = $word;
+            if (in_array($word, $this->stopWords)) {
+                continue;
             }
+
+            $end[] = $word;
         }
 
+        $end = array_unique($end);
         while (mb_strlen(implode(',', $end), 'UTF-8') > $length) {
             $end = array_slice($end, 0, count($end) - 1);
         }
@@ -82,5 +102,32 @@ class SeoHelper
     public function generateTitle($source, $length = 60)
     {
         return mb_substr($source, 0, $length, 'UTF-8');
+    }
+
+    public function fillFromSource(SeoSourceInterface $source, $target)
+    {
+        $helper = new Seo();
+        $attributes = [
+            'title' => $helper->generateTitle($source->getTitleSource()),
+            'description' => $helper->generateDescription($source->getDescriptionSource()),
+            'keywords' => $helper->generateKeywords($source->getKeywordsSource()),
+        ];
+
+        if ($source instanceof AbsoluteUrlInterface) {
+            $attributes = array_merge($attributes, [
+                'url' => $source->getCanonicalSource(),
+                'canonical' => $source->getCanonicalSource(),
+            ]);
+        }
+
+        if ($this->getIsNewRecord()) {
+            $this->setAttributes($attributes);
+        } else {
+            foreach (array_keys(self::getFields()) as $field) {
+                if (empty($this->{$field}) && isset($attributes[$field])) {
+                    $this->setAttribute($field, $attributes[$field]);
+                }
+            }
+        }
     }
 }

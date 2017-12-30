@@ -1,0 +1,42 @@
+{% extends "admin/base.html" %}
+
+{% block breadcrumbs %}
+    {% set breadcrumbs = [
+    ['name' => 'СЕО шаблоны']
+    ] %}
+    {% parent %}
+{% endblock %}
+
+{% block content %}
+    <h1 class="b-heading">СЕО шаблоны</h1>
+
+    <a href="{{ url('admin_seo_template_create') }}" class="b-button">Добавить мета информацию</a>
+
+    <table class="b-table">
+        <thead class="b-table__thead">
+        <tr class="b-table__tr">
+            <th class="b-table__th">Код</th>
+            <th class="b-table__th">Шаблон</th>
+            <th class="b-table__th"></th>
+        </tr>
+        </thead>
+        <tbody class="b-table__tbody">
+        {% for template in templates %}
+            <tr class="b-table__tr">
+                {% include "admin/seo/template/_template_row.html" with ['template' => template] %}
+                <td class="b-table__td b-td__actions">
+                    <a class="b-td__link"
+                       href="{{ url('admin_seo_template_update', ['id' => template.id]) }}" title="Изменить">
+                        <span class="b-icon">&#xE254;</span>
+                    </a>
+                    <a class="b-td__link"
+                       data-confirm="Удалить заказ?"
+                       href="{{ url('admin_seo_template_remove', ['id' => template.id]) }}" title="Удалить">
+                        <span class="b-icon">&#xE872;</span>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

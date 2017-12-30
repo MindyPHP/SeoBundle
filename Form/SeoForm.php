@@ -10,16 +10,16 @@
 
 namespace Mindy\Bundle\SeoBundle\Form;
 
-use Mindy\Bundle\AdminBundle\Form\Type\ButtonsType;
 use Mindy\Bundle\SeoBundle\Model\Seo;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class SeoFormType extends AbstractType
+class SeoForm extends AbstractType
 {
     protected $request;
 
@@ -31,13 +31,6 @@ class SeoFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('host', TextType::class, [
-                'label' => 'Хост',
-                'constraints' => [
-                    new Assert\NotBlank(),
-                ],
-                'data' => $this->request->getHost(),
-            ])
             ->add('url', TextType::class, [
                 'label' => 'Адрес страницы',
                 'constraints' => [
@@ -69,7 +62,9 @@ class SeoFormType extends AbstractType
                     new Assert\Length(['max' => 160]),
                 ],
             ])
-            ->add('buttons', ButtonsType::class);
+            ->add('submit', SubmitType::class, [
+                'label' => 'Сохранить',
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

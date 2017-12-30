@@ -1,6 +1,13 @@
 {
     "name": "mindy/seo-bundle",
+    "type": "symfony-bundle",
     "license": "MIT",
+    "config": {
+        "preferred-install": {
+            "*": "dist"
+        },
+        "sort-packages": true
+    },
     "autoload": {
         "psr-4": {
             "Mindy\\Bundle\\SeoBundle\\": ""
@@ -9,8 +16,20 @@
             "/Tests/"
         ]
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Mindy\\Bundle\\SeoBundle\\Tests\\": ""
+        }
+    },
     "require": {
-        "php": ">=5.5.9"
+        "php": ">=7.0"
+    },
+    "require-dev": {
+        "mindy/orm-bundle": "~3.0|~4.0",
+        "mindy/pagination-bundle": "~4.0",
+        "mindy/template-bundle": "~4.0",
+        "phpunit/phpunit": "^6.5",
+        "symfony/framework-bundle": "~3.0|~4.0"
     },
     "authors": [
         {
@@ -18,11 +37,5 @@
             "email": "max@studio107.ru",
             "homepage": "http://studio107.ru"
         }
-    ],
-    "minimum-stability": "dev",
-    "extra": {
-        "branch-alias": {
-            "dev-master": "3.6.8-dev"
-        }
-    }
+    ]
 }

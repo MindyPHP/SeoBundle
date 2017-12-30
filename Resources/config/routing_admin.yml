@@ -1,0 +1,47 @@
+admin_seo_seo_list:
+    path: /seo/list
+    defaults:
+        _controller: Mindy\Bundle\SeoBundle\Controller\Admin\SeoController::list
+
+admin_seo_seo_create:
+    path: /seo/create
+    defaults:
+        _controller: Mindy\Bundle\SeoBundle\Controller\Admin\SeoController::create
+
+admin_seo_seo_update:
+    path: /seo/update/{id}
+    defaults:
+        _controller: Mindy\Bundle\SeoBundle\Controller\Admin\SeoController::update
+    requirements:
+        id: \d+
+
+admin_seo_seo_remove:
+    path: /seo/remove/{id}
+    defaults:
+        _controller: Mindy\Bundle\SeoBundle\Controller\Admin\SeoController::remove
+    requirements:
+        id: \d+
+
+admin_seo_template_list:
+    path: /template/list
+    defaults:
+        _controller: Mindy\Bundle\SeoBundle\Controller\Admin\TemplateController::list
+
+admin_seo_template_create:
+    path: /template/create
+    defaults:
+        _controller: Mindy\Bundle\SeoBundle\Controller\Admin\TemplateController::create
+
+admin_seo_template_update:
+    path: /template/update/{id}
+    defaults:
+        _controller: Mindy\Bundle\SeoBundle\Controller\Admin\TemplateController::update
+    requirements:
+        id: \d+
+
+admin_seo_template_remove:
+    path: /template/remove/{id}
+    defaults:
+        _controller: Mindy\Bundle\SeoBundle\Controller\Admin\TemplateController::remove
+    requirements:
+        id: \d+

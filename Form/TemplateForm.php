@@ -10,9 +10,9 @@
 
 namespace Mindy\Bundle\SeoBundle\Form;
 
-use Mindy\Bundle\AdminBundle\Form\Type\ButtonsType;
 use Mindy\Bundle\SeoBundle\Model\Template;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -36,7 +36,9 @@ class TemplateForm extends AbstractType
                     new Assert\NotBlank(),
                 ],
             ])
-            ->add('buttons', ButtonsType::class);
+            ->add('submit', SubmitType::class, [
+                'label' => 'Сохранить',
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

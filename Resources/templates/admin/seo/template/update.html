@@ -1,0 +1,14 @@
+{% extends "admin/base.html" %}
+
+{% block breadcrumbs %}
+    {% set breadcrumbs = [
+    ['name' => 'СЕО шаблоны', 'url' => url('admin_seo_template_list')],
+    ['name' => 'Редактирование СЕО шаблона: ' ~ template]
+    ] %}
+    {% parent %}
+{% endblock %}
+
+{% block content %}
+    <h1 class="b-heading">Редактирование СЕО шаблона: {{ template }}</h1>
+    {{ form_render(form)|safe }}
+{% endblock %}

@@ -25,20 +25,16 @@ class SeoProvider
      */
     public function getMeta(Request $request)
     {
-        return $this->fetchMeta($request->getHost(), $request->getPathInfo());
+        return $this->fetchMeta($request->getPathInfo());
     }
 
     /**
-     * @param $host
      * @param $url
      *
      * @return \Mindy\Orm\ModelInterface|null
      */
-    public function fetchMeta($host, $url)
+    public function fetchMeta($url)
     {
-        return Seo::objects()->get([
-            'host' => $host,
-            'url' => $url,
-        ]);
+        return Seo::objects()->get(['url' => $url]);
     }
 }

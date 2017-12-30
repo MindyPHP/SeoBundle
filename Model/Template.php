@@ -27,7 +27,6 @@ class Template extends Model
         return [
             'code' => [
                 'class' => CharField::class,
-                'unique' => true,
             ],
             'content' => [
                 'class' => TextField::class,

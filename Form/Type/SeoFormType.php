@@ -8,9 +8,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Mindy\Bundle\SeoBundle\Form;
+namespace Mindy\Bundle\SeoBundle\Form\Type;
 
+use Mindy\Bundle\SeoBundle\Helper\SeoHelper;
 use Mindy\Bundle\SeoBundle\Model\Seo;
+use Mindy\Bundle\SeoBundle\Provider\SeoProvider;
+use Mindy\Bundle\SeoBundle\Seo\SeoSourceInterface;
+use Mindy\Orm\ModelInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -18,29 +22,48 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class SeoInlineFormType extends AbstractType
+class SeoFormType extends AbstractType
 {
     /**
      * @var \Symfony\Component\HttpFoundation\Request
      */
     protected $request;
+    /**
+     * @var SeoProvider
+     */
+    protected $seoProvider;
 
     /**
      * MetaInlineFormType constructor.
      *
      * @param RequestStack $requestStack
+     * @param SeoProvider  $seoProvider
      */
-    public function __construct(RequestStack $requestStack)
+    public function __construct(RequestStack $requestStack, SeoProvider $seoProvider)
     {
         $this->request = $requestStack->getCurrentRequest();
+        $this->seoProvider = $seoProvider;
     }
 
     /**
-     * @return string
+     * @param Seo                               $seo
+     * @param SeoSourceInterface|ModelInterface $source
      */
-    protected function getHost()
+    protected function generateMeta(Seo $seo, SeoSourceInterface $source)
     {
-        return $this->request->getHost();
+        $helper = new SeoHelper();
+        $seo->setAttributes([
+            'title' => $helper->generateTitle($source->getTitleSource()),
+            'description' => $helper->generateDescription($source->getDescriptionSource()),
+            'keywords' => $helper->generateKeywords($source->getKeywordsSource()),
+        ]);
+
+        if (false === $source->getIsNewRecord()) {
+            $seo->setAttributes([
+                'url' => $source->getCanonicalSource(),
+                'canonical' => $source->getCanonicalSource(),
+            ]);
+        }
     }
 
     /**
@@ -49,6 +72,18 @@ class SeoInlineFormType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        /** @var SeoSourceInterface|ModelInterface $source */
+        $source = $options['source'];
+
+        if (false === $source->getIsNewRecord()) {
+            $seo = $this->seoProvider->fetchMeta($source->getCanonicalSource());
+            if (null === $seo) {
+                $seo = new Seo();
+                $this->generateMeta($seo, $source);
+            }
+            $builder->setData($seo);
+        }
+
         $builder
             ->add('canonical', TextType::class, [
                 'label' => 'Абсолютный адрес (canonical)',
@@ -80,8 +115,8 @@ class SeoInlineFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'mapped' => false,
             'data_class' => Seo::class,
+            'source' => SeoSourceInterface::class,
         ]);
     }
 }

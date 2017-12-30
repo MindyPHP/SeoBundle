@@ -12,20 +12,35 @@ namespace Mindy\Bundle\SeoBundle\Library;
 
 use Mindy\Bundle\SeoBundle\Model\Template;
 use Mindy\Bundle\SeoBundle\Provider\SeoProvider;
-use Mindy\Template\Library;
-use Mindy\Template\Renderer;
+use Mindy\Template\Library\AbstractLibrary;
+use Mindy\Template\TemplateEngine;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class SeoLibrary extends Library
+class SeoLibrary extends AbstractLibrary
 {
+    /**
+     * @var null|\Symfony\Component\HttpFoundation\Request
+     */
     protected $request;
-    protected $metaProvider;
+    /**
+     * @var SeoProvider
+     */
+    protected $seoProvider;
+    /**
+     * @var TemplateEngine
+     */
     protected $template;
 
-    public function __construct(RequestStack $requestStack, SeoProvider $metaProvider, Renderer $template)
+    /**
+     * SeoLibrary constructor.
+     * @param RequestStack $requestStack
+     * @param SeoProvider $metaProvider
+     * @param TemplateEngine $template
+     */
+    public function __construct(RequestStack $requestStack, SeoProvider $metaProvider, TemplateEngine $template)
     {
         $this->request = $requestStack->getCurrentRequest();
-        $this->metaProvider = $metaProvider;
+        $this->seoProvider = $metaProvider;
         $this->template = $template;
     }
 
@@ -36,7 +51,7 @@ class SeoLibrary extends Library
     {
         return [
             'render_meta' => function ($template = 'seo/meta.html') {
-                $meta = $this->metaProvider->getMeta($this->request);
+                $meta = $this->seoProvider->getMeta($this->request);
                 if (null === $meta) {
                     $meta = [];
                 }
