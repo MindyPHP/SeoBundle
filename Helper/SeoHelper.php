@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Mindy Framework.
  * (c) 2017 Maxim Falaleev
@@ -57,12 +59,17 @@ class SeoHelper
                 continue;
             }
 
-            $end[] = mb_strtolower($keyword, 'UTF-8');
+            $word = mb_strtolower($keyword, 'UTF-8');
+
+            if (false === in_array($word, $end)) {
+                $end[] = $word;
+            }
         }
 
         while (mb_strlen(implode(',', $end), 'UTF-8') > $length) {
             $end = array_slice($end, 0, count($end) - 1);
         }
+
         return implode(',', $end);
     }
 
