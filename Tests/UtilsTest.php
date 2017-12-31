@@ -10,17 +10,17 @@
 
 namespace Mindy\Bundle\SeoBundle\Tests;
 
-use Mindy\Bundle\SeoBundle\Util\Seo;
+use Mindy\Bundle\SeoBundle\Util\SeoUtil;
 use PHPUnit\Framework\TestCase;
 
 class UtilsTest extends TestCase
 {
     public function testKeywords()
     {
-        $s = new Seo(['hello']);
+        $s = new SeoUtil(['hello']);
         $this->assertSame('привет,world', $s->generateKeywords('Привет привет foo bar  hello world'));
 
-        $s = new Seo();
+        $s = new SeoUtil();
         $this->assertSame('привет,hello,world', $s->generateKeywords('Привет привет foo bar  hello world'));
         $this->assertSame('привет', $s->generateKeywords('Привет привет foo bar  hello world', 10));
         $this->assertSame('привет', $s->generateKeywords('Привет привет foo bar  hello world', 10));

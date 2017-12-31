@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Mindy\Bundle\SeoBundle\EventListener;
 
 use Mindy\Bundle\SeoBundle\Provider\SeoProvider;
+use Mindy\Bundle\SeoBundle\Util\SeoUtil;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class SeoListener implements EventSubscriberInterface
@@ -45,7 +46,10 @@ class SeoListener implements EventSubscriberInterface
     public function onSave(SeoEvent $event)
     {
         $seo = $event->getSeo();
-        $seo->fillFromSource($event->getSource(), $this->autoFillEmpty);
+
+        $seoUtil = new SeoUtil();
+        $seoUtil->fillFromSource($seo);
+
         if (false === $seo->save()) {
             throw new \RuntimeException('Error while save seo');
         }

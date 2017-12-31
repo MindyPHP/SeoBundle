@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Mindy Framework.
  * (c) 2017 Maxim Falaleev
@@ -10,12 +12,9 @@
 
 namespace Mindy\Bundle\SeoBundle\Model;
 
-use Mindy\Bundle\MindyBundle\Traits\AbsoluteUrlInterface;
-use Mindy\Bundle\SeoBundle\Seo\SeoSourceInterface;
 use Mindy\Orm\Fields\CharField;
 use Mindy\Orm\Fields\TextField;
 use Mindy\Orm\Model;
-use Mindy\Orm\ModelInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**

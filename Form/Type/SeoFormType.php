@@ -10,10 +10,10 @@
 
 namespace Mindy\Bundle\SeoBundle\Form\Type;
 
-use Mindy\Bundle\SeoBundle\Helper\SeoHelper;
 use Mindy\Bundle\SeoBundle\Model\Seo;
 use Mindy\Bundle\SeoBundle\Provider\SeoProvider;
 use Mindy\Bundle\SeoBundle\Seo\SeoSourceInterface;
+use Mindy\Bundle\SeoBundle\Util\SeoUtil;
 use Mindy\Orm\ModelInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -51,7 +51,7 @@ class SeoFormType extends AbstractType
      */
     protected function generateMeta(Seo $seo, SeoSourceInterface $source)
     {
-        $helper = new SeoHelper();
+        $helper = new SeoUtil();
         $seo->setAttributes([
             'title' => $helper->generateTitle($source->getTitleSource()),
             'description' => $helper->generateDescription($source->getDescriptionSource()),

@@ -14,8 +14,9 @@ namespace Mindy\Bundle\SeoBundle\Util;
 
 use Mindy\Bundle\SeoBundle\Seo\SeoSourceInterface;
 use Mindy\Bundle\MindyBundle\Traits\AbsoluteUrlInterface;
+use Mindy\Orm\ModelInterface;
 
-class Seo
+class SeoUtil
 {
     /**
      * @var array
@@ -104,9 +105,12 @@ class Seo
         return mb_substr($source, 0, $length, 'UTF-8');
     }
 
-    public function fillFromSource(SeoSourceInterface $source, $target)
+    /**
+     * @param SeoSourceInterface|ModelInterface $source
+     */
+    public function fillFromSource(SeoSourceInterface $source)
     {
-        $helper = new Seo();
+        $helper = new SeoUtil();
         $attributes = [
             'title' => $helper->generateTitle($source->getTitleSource()),
             'description' => $helper->generateDescription($source->getDescriptionSource()),
@@ -120,12 +124,12 @@ class Seo
             ]);
         }
 
-        if ($this->getIsNewRecord()) {
-            $this->setAttributes($attributes);
+        if ($source->getIsNewRecord()) {
+            $source->setAttributes($attributes);
         } else {
-            foreach (array_keys(self::getFields()) as $field) {
-                if (empty($this->{$field}) && isset($attributes[$field])) {
-                    $this->setAttribute($field, $attributes[$field]);
+            foreach (array_keys($source->getFields()) as $field) {
+                if (empty($source->{$field}) && isset($attributes[$field])) {
+                    $source->setAttribute($field, $attributes[$field]);
                 }
             }
         }
