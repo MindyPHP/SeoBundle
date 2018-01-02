@@ -16,7 +16,7 @@ use Mindy\Bundle\SeoBundle\Provider\SeoProvider;
 use Mindy\Bundle\SeoBundle\Util\SeoUtil;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class SeoListener implements EventSubscriberInterface
+class SeoEventSubscriber implements EventSubscriberInterface
 {
     /**
      * @var SeoProvider
@@ -24,20 +24,13 @@ class SeoListener implements EventSubscriberInterface
     protected $provider;
 
     /**
-     * @var bool
-     */
-    protected $autoFillEmpty = true;
-
-    /**
      * SeoListener constructor.
      *
      * @param SeoProvider $provider
-     * @param $autoFillEmpty
      */
-    public function __construct(SeoProvider $provider, $autoFillEmpty)
+    public function __construct(SeoProvider $provider)
     {
         $this->provider = $provider;
-        $this->autoFillEmpty = $autoFillEmpty;
     }
 
     /**
