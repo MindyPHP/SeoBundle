@@ -4,6 +4,11 @@ services:
         autoconfigure: true
         public: false
 
+    _instanceof:
+        Mindy\Template\Library\LibraryInterface:
+            public: true
+            tags: ['template.library']
+
     Mindy\Bundle\SeoBundle\:
         resource: '../../*'
         exclude: '../../{Model,Migrations,Tests,vendor}'
