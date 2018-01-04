@@ -38,7 +38,7 @@ class SeoController extends Controller
 
         $form = $this->createForm(SeoForm::class, $seo, [
             'method' => 'POST',
-            'action' => $this->generateUrl('admin_rise_seo_seo_create'),
+            'action' => $this->generateUrl('admin_seo_seo_create'),
         ]);
 
         if ($form->handleRequest($request) && $form->isValid()) {
@@ -49,7 +49,7 @@ class SeoController extends Controller
 
             $this->addFlash('success', 'Мета информация успешно сохранена');
 
-            return $this->redirectToRoute('admin_rise_seo_seo_list');
+            return $this->redirectToRoute('admin_seo_seo_list');
         }
 
         return $this->render('admin/seo/seo/create.html', [
@@ -66,7 +66,7 @@ class SeoController extends Controller
 
         $form = $this->createForm(SeoForm::class, $seo, [
             'method' => 'POST',
-            'action' => $this->generateUrl('admin_rise_seo_seo_update', ['id' => $id]),
+            'action' => $this->generateUrl('admin_seo_seo_update', ['id' => $id]),
         ]);
 
         if ($form->handleRequest($request) && $form->isValid()) {
@@ -77,7 +77,7 @@ class SeoController extends Controller
 
             $this->addFlash('success', 'Мета информация успешно сохранена');
 
-            return $this->redirectToRoute('admin_rise_seo_seo_list');
+            return $this->redirectToRoute('admin_seo_seo_list');
         }
 
         return $this->render('admin/seo/seo/update.html', [
@@ -97,6 +97,6 @@ class SeoController extends Controller
 
         $this->addFlash('success', 'Мета информация успешно удалена');
 
-        return $this->redirectToRoute('admin_rise_seo_seo_list');
+        return $this->redirectToRoute('admin_seo_seo_list');
     }
 }
