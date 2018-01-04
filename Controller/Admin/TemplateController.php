@@ -36,7 +36,7 @@ class TemplateController extends Controller
 
         $form = $this->createForm(TemplateForm::class, $template, [
             'method' => 'POST',
-            'action' => $this->generateUrl('admin_rise_seo_template_create'),
+            'action' => $this->generateUrl('admin_seo_template_create'),
         ]);
 
         if ($form->handleRequest($request) && $form->isValid()) {
@@ -47,7 +47,7 @@ class TemplateController extends Controller
 
             $this->addFlash('success', 'Шаблон успешно сохранен');
 
-            return $this->redirectToRoute('admin_rise_seo_template_list');
+            return $this->redirectToRoute('admin_seo_template_list');
         }
 
         return $this->render('admin/seo/template/create.html', [
@@ -64,7 +64,7 @@ class TemplateController extends Controller
 
         $form = $this->createForm(TemplateForm::class, $template, [
             'method' => 'POST',
-            'action' => $this->generateUrl('admin_rise_seo_template_update', ['id' => $id]),
+            'action' => $this->generateUrl('admin_seo_template_update', ['id' => $id]),
         ]);
 
         if ($form->handleRequest($request) && $form->isValid()) {
@@ -75,7 +75,7 @@ class TemplateController extends Controller
 
             $this->addFlash('success', 'Шаблон успешно сохранен');
 
-            return $this->redirectToRoute('admin_rise_seo_template_list');
+            return $this->redirectToRoute('admin_seo_template_list');
         }
 
         return $this->render('admin/seo/template/update.html', [
@@ -95,6 +95,6 @@ class TemplateController extends Controller
 
         $this->addFlash('success', 'Шаблон успешно удален');
 
-        return $this->redirectToRoute('admin_rise_seo_template_list');
+        return $this->redirectToRoute('admin_seo_template_list');
     }
 }
