@@ -41,7 +41,7 @@ class SeoEventSubscriber implements EventSubscriberInterface
         $seo = $event->getSeo();
 
         $seoUtil = new SeoUtil();
-        $seoUtil->fillFromSource($seo);
+        $seoUtil->fillFromSource($seo, $event->getSource());
 
         if (false === $seo->save()) {
             throw new \RuntimeException('Error while save seo');

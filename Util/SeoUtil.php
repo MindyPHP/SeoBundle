@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Mindy\Bundle\SeoBundle\Util;
 
+use Mindy\Bundle\SeoBundle\Model\Seo;
 use Mindy\Bundle\SeoBundle\Seo\SeoSourceInterface;
 use Mindy\Bundle\MindyBundle\Traits\AbsoluteUrlInterface;
 use Mindy\Orm\ModelInterface;
@@ -108,7 +109,7 @@ class SeoUtil
     /**
      * @param SeoSourceInterface|ModelInterface $source
      */
-    public function fillFromSource(SeoSourceInterface $source)
+    public function fillFromSource(Seo $seo, SeoSourceInterface $source)
     {
         $helper = new SeoUtil();
         $attributes = [
@@ -124,12 +125,12 @@ class SeoUtil
             ]);
         }
 
-        if ($source->getIsNewRecord()) {
-            $source->setAttributes($attributes);
+        if ($seo->getIsNewRecord()) {
+            $seo->setAttributes($attributes);
         } else {
             foreach (array_keys($source->getFields()) as $field) {
-                if (empty($source->{$field}) && isset($attributes[$field])) {
-                    $source->setAttribute($field, $attributes[$field]);
+                if (empty($seo->{$field}) && isset($attributes[$field])) {
+                    $seo->setAttribute($field, $attributes[$field]);
                 }
             }
         }
