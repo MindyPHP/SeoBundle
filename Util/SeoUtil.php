@@ -3,8 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of Mindy Framework.
- * (c) 2017 Maxim Falaleev
+ * Studio 107 (c) 2018 Maxim Falaleev
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -12,9 +11,9 @@ declare(strict_types=1);
 
 namespace Mindy\Bundle\SeoBundle\Util;
 
+use Mindy\Bundle\MindyBundle\Traits\AbsoluteUrlInterface;
 use Mindy\Bundle\SeoBundle\Model\Seo;
 use Mindy\Bundle\SeoBundle\Seo\SeoSourceInterface;
-use Mindy\Bundle\MindyBundle\Traits\AbsoluteUrlInterface;
 use Mindy\Orm\ModelInterface;
 
 class SeoUtil
@@ -41,7 +40,7 @@ class SeoUtil
      */
     protected function removeHtml($source)
     {
-        return strip_tags($source);
+        return strip_tags((string) $source);
     }
 
     /**
@@ -103,15 +102,16 @@ class SeoUtil
      */
     public function generateTitle($source, $length = 60)
     {
-        return mb_substr($source, 0, $length, 'UTF-8');
+        return mb_substr((string) $source, 0, $length, 'UTF-8');
     }
 
     /**
+     * @param Seo                               $seo
      * @param SeoSourceInterface|ModelInterface $source
      */
     public function fillFromSource(Seo $seo, SeoSourceInterface $source)
     {
-        $helper = new SeoUtil();
+        $helper = new self();
         $attributes = [
             'title' => $helper->generateTitle($source->getTitleSource()),
             'description' => $helper->generateDescription($source->getDescriptionSource()),
