@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Mindy\Bundle\SeoBundle\Util;
 
-use Mindy\Bundle\MindyBundle\Traits\AbsoluteUrlInterface;
 use Mindy\Bundle\SeoBundle\Model\Seo;
 use Mindy\Bundle\SeoBundle\Seo\SeoSourceInterface;
 use Mindy\Orm\ModelInterface;
@@ -108,31 +107,32 @@ class SeoUtil
     /**
      * @param Seo                               $seo
      * @param SeoSourceInterface|ModelInterface $source
+     *
+     * @throws \Exception
+     *
+     * @return Seo
      */
     public function fillFromSource(Seo $seo, SeoSourceInterface $source)
     {
-        $helper = new self();
         $attributes = [
-            'title' => $helper->generateTitle($source->getTitleSource()),
-            'description' => $helper->generateDescription($source->getDescriptionSource()),
-            'keywords' => $helper->generateKeywords($source->getKeywordsSource()),
+            'title' => $this->generateTitle($source->getTitleSource()),
+            'description' => $this->generateDescription($source->getDescriptionSource()),
+            'keywords' => $this->generateKeywords($source->getKeywordsSource()),
         ];
 
-        if ($source instanceof AbsoluteUrlInterface) {
+        if (false === $source->getIsNewRecord()) {
             $attributes = array_merge($attributes, [
-                'url' => $source->getCanonicalSource(),
+                'url' => $source->getAbsoluteUrl(),
                 'canonical' => $source->getCanonicalSource(),
             ]);
         }
 
-        if ($seo->getIsNewRecord()) {
-            $seo->setAttributes($attributes);
-        } else {
-            foreach (array_keys($source->getFields()) as $field) {
-                if (empty($seo->{$field}) && isset($attributes[$field])) {
-                    $seo->setAttribute($field, $attributes[$field]);
-                }
+        foreach ($attributes as $key => $value) {
+            if (empty($seo->{$key}) && false === empty($attributes[$key])) {
+                $seo->setAttribute($key, $attributes[$key]);
             }
         }
+
+        return $seo;
     }
 }

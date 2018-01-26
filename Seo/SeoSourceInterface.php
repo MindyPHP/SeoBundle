@@ -3,8 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of Mindy Framework.
- * (c) 2017 Maxim Falaleev
+ * Studio 107 (c) 2018 Maxim Falaleev
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -12,7 +11,10 @@ declare(strict_types=1);
 
 namespace Mindy\Bundle\SeoBundle\Seo;
 
-interface SeoSourceInterface
+use Mindy\Bundle\MindyBundle\Traits\AbsoluteUrlInterface;
+use Mindy\Orm\ModelInterface;
+
+interface SeoSourceInterface extends AbsoluteUrlInterface
 {
     /**
      * @return string
@@ -38,4 +40,14 @@ interface SeoSourceInterface
      * @return array
      */
     public function getOgSource();
+
+    /**
+     * @return ModelInterface|null
+     */
+    public function getSeo();
+
+    /**
+     * @return ModelInterface|null
+     */
+    public function fetchSeo();
 }

@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 /*
- * This file is part of Mindy Framework.
- * (c) 2017 Maxim Falaleev
+ * Studio 107 (c) 2018 Maxim Falaleev
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -81,14 +82,16 @@ class SeoFormType extends AbstractType
                 $seo = new Seo();
                 $this->generateMeta($seo, $source);
             }
-            $builder->setData($seo);
+
+            $builder
+                ->setData($seo)
+                ->add('canonical', TextType::class, [
+                    'label' => 'Абсолютный адрес (canonical)',
+                    'required' => false,
+                ]);
         }
 
         $builder
-            ->add('canonical', TextType::class, [
-                'label' => 'Абсолютный адрес (canonical)',
-                'required' => false,
-            ])
             ->add('title', TextType::class, [
                 'label' => 'Заголовок (title)',
                 'required' => false,
