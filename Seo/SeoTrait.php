@@ -11,20 +11,39 @@ declare(strict_types=1);
 
 namespace Mindy\Bundle\SeoBundle\Seo;
 
+use Mindy\Bundle\SeoBundle\Model\Seo;
 use Mindy\Orm\ModelInterface;
 
-/**
- * Trait SeoTrait
- */
 trait SeoTrait
 {
     /**
-     * @return ModelInterface|SeoSourceInterface|null
+     * @var Seo
+     */
+    protected $seo;
+
+    /**
+     * @param Seo|null $seo
+     */
+    public function setSeo($seo)
+    {
+        $this->seo = $seo;
+    }
+
+    /**
+     * @return ModelInterface|null
+     */
+    public function fetchSeo()
+    {
+        return Seo::objects()->get([
+            'url' => $this->getAbsoluteUrl()
+        ]);
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function getSeo()
     {
-        return self::objects()->get([
-            'url' => $this->getAbsoluteUrl(),
-        ]);
+        return $this->seo;
     }
 }

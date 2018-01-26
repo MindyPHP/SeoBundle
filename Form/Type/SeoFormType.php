@@ -12,79 +12,40 @@ declare(strict_types=1);
 namespace Mindy\Bundle\SeoBundle\Form\Type;
 
 use Mindy\Bundle\SeoBundle\Model\Seo;
-use Mindy\Bundle\SeoBundle\Provider\SeoProvider;
 use Mindy\Bundle\SeoBundle\Seo\SeoSourceInterface;
 use Mindy\Bundle\SeoBundle\Util\SeoUtil;
 use Mindy\Orm\ModelInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class SeoFormType extends AbstractType
 {
     /**
-     * @var \Symfony\Component\HttpFoundation\Request
-     */
-    protected $request;
-    /**
-     * @var SeoProvider
-     */
-    protected $seoProvider;
-
-    /**
-     * MetaInlineFormType constructor.
-     *
-     * @param RequestStack $requestStack
-     * @param SeoProvider  $seoProvider
-     */
-    public function __construct(RequestStack $requestStack, SeoProvider $seoProvider)
-    {
-        $this->request = $requestStack->getCurrentRequest();
-        $this->seoProvider = $seoProvider;
-    }
-
-    /**
-     * @param Seo                               $seo
-     * @param SeoSourceInterface|ModelInterface $source
-     */
-    protected function generateMeta(Seo $seo, SeoSourceInterface $source)
-    {
-        $helper = new SeoUtil();
-        $seo->setAttributes([
-            'title' => $helper->generateTitle($source->getTitleSource()),
-            'description' => $helper->generateDescription($source->getDescriptionSource()),
-            'keywords' => $helper->generateKeywords($source->getKeywordsSource()),
-        ]);
-
-        if (false === $source->getIsNewRecord()) {
-            $seo->setAttributes([
-                'url' => $source->getCanonicalSource(),
-                'canonical' => $source->getCanonicalSource(),
-            ]);
-        }
-    }
-
-    /**
      * @param FormBuilderInterface $builder
      * @param array                $options
+     *
+     * @throws \Exception
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        /** @var SeoSourceInterface|ModelInterface $source */
+        /** @var SeoSourceInterface|ModelInterface $instance */
         $source = $options['source'];
 
-        if (false === $source->getIsNewRecord()) {
-            $seo = $this->seoProvider->fetchMeta($source->getCanonicalSource());
-            if (null === $seo) {
-                $seo = new Seo();
-                $this->generateMeta($seo, $source);
-            }
+        if ($source->getIsNewRecord()) {
+            $seo = new Seo();
+            $seoUtil = new SeoUtil();
+            $seoUtil->fillFromSource($seo, $source);
+        } else {
+            $seo = $source->fetchSeo();
+        }
 
+        $source->setSeo($seo);
+
+        if (false === $source->getIsNewRecord()) {
             $builder
-                ->setData($seo)
                 ->add('canonical', TextType::class, [
                     'label' => 'Абсолютный адрес (canonical)',
                     'required' => false,
@@ -118,6 +79,7 @@ class SeoFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
+            'label' => false,
             'data_class' => Seo::class,
             'source' => SeoSourceInterface::class,
         ]);
